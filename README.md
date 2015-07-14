@@ -1,2 +1,2 @@
 # twitter-trends
-Repo for the Twitter Trends Team of the 2025 CDIPS Data Science Workshop at UC Berkeley
+Repo for the Twitter Trends Team of the 2015 CDIPS Data Science Workshop at UC Berkeley
