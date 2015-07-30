@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>CDIPS-Twitter Trends</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <link rel="shortcut icon" href="http://cartodb.com/assets/favicon.ico" />
+    <style>
+      html, body, #map {
+        height: 100%;
+        padding: 0;
+        margin: 0;
+      }
+    </style>
+
+<link rel="stylesheet" type="text/css" href="static/stylesheet-pure-css.css">
+<link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/3.15/themes/css/cartodb.css">
+
+<script src="http://libs.cartocdn.com/cartodb.js/v3/3.15/cartodb.js"></script>
+  </head>
+  <body> 
+  
+    <div id="map">
+      <form action="">
+      Choose a visualization demo: <br>
+      <div>
+        <input id="radio1" type="radio" name="radio" value="offline" onClick="getMap();"><label for="radio1"><span><span></span></span>#Elections2016</label>
+      </div>
+      <div> 
+      <div>
+        <input id="radio2" type="radio" name="radio" value="live"><label for="radio2"><span><span></span></span><form action="/hashtag"> Enter Hashtag:#
+         
+        <input type="text" name="hashtag">
+        <input type="submit" value="Submit">
+</form></label>
+      </div>
+      <div> 
+<input type="radio" name="option" value="live"> 
+          
+</form>
+
+    </div>
+
+
+      <script type="text/javascript">
+      function getMap() {
+        cartodb.createVis('map', 'https://ilgeakkaya.cartodb.com/api/v2/viz/c116d4ac-3490-11e5-ace3-0e853d047bba/viz.json', {
+          })
+          .done(function(vis, layers) {
+            window.layers = layers;
+          })
+          .error(function(err) {
+            console.log(err);
+          });
+      }
+      function main() {
+        
+      }
+      window.onload = main;
+    </script>
+  </body>
+</html>
