@@ -1,62 +1,97 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>CDIPS-Twitter Trends</title>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
-    <link rel="shortcut icon" href="http://cartodb.com/assets/favicon.ico" />
-    <style>
-      html, body, #map {
-        height: 100%;
-        padding: 0;
-        margin: 0;
+<head>
+  <title>CDIPS-Twitter Trends</title>
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+  <link rel="shortcut icon" href="http://cartodb.com/assets/favicon.ico" />
+  <style>
+    html,
+    #body{
+      width: 1000px;
       }
-    </style>
+    #map{
+      width:95%;
+      height: 500px;
+      padding:10px;
+    }
+    #map1, #map2 {
+      height: 400px;
+      width: 45%;
+      padding: 0;
+      margin: 10px; 
+      float:left;
+    }
+    .child_div_1{
+      float: left;
+      margin-right:5px;
+    }
+  </style>
 
-<link rel="stylesheet" type="text/css" href="static/stylesheet-pure-css.css">
-<link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/3.15/themes/css/cartodb.css">
+  <link rel="stylesheet" type="text/css" href="static/stylesheet-pure-css.css">
+  <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/3.15/themes/css/cartodb.css">
 
-<script src="http://libs.cartocdn.com/cartodb.js/v3/3.15/cartodb.js"></script>
-  </head>
-  <body> 
-  
-    <div id="map">
-      <form action="">
-      Choose a visualization demo: <br>
+  <script src="http://libs.cartocdn.com/cartodb.js/v3/3.15/cartodb.js"></script>
+</head>
+<body> 
+
+  <div id="forms">
+    <form action="">
+      Choose a visualization: <br>
       <div>
-        <input id="radio1" type="radio" name="radio" value="offline" onClick="getMap();"><label for="radio1"><span><span></span></span>#Elections2016</label>
+        <input id="radio1" type="radio" name="radio" value="offline" onClick="getComparisonMap();"><label for="radio1"><span><span></span></span>#Elections2016</label>
+      </div> 
+      <div>
+        <input id="radio2" type="radio" name="radio" value="offline" onClick="getHillary();"><label for="radio2"><span><span></span></span>#Hillary vs #Trump</label>
       </div>
-      <div> 
       <div>
-        <input id="radio2" type="radio" name="radio" value="live"><label for="radio2"><span><span></span></span><form action="/hashtag"> Enter Hashtag:#
-         
+        <input id="radio3" type="radio" name="radio" value="live"><label for="radio3"><span><span></span></span><form action="/hashtag"> Enter Hashtag:#
+
         <input type="text" name="hashtag">
         <input type="submit" value="Submit">
-</form></label>
+      </form></label>
       </div>
-      <div> 
-<input type="radio" name="option" value="live"> 
-          
-</form>
+    </form>
 
+  </div>
+
+  <div id="map">
+  </div> 
+    <div id="map1">
+    </div>
+    <div id="map2">
     </div>
 
+  
 
-      <script type="text/javascript">
-      function getMap() {
-        cartodb.createVis('map', 'https://ilgeakkaya.cartodb.com/api/v2/viz/c116d4ac-3490-11e5-ace3-0e853d047bba/viz.json', {
-          })
-          .done(function(vis, layers) {
-            window.layers = layers;
-          })
-          .error(function(err) {
-            console.log(err);
-          });
-      }
-      function main() {
-        
-      }
-      window.onload = main;
-    </script>
-  </body>
+
+  <script type="text/javascript">
+    function getComparisonMap() {  
+      document.getElementById('map').innerHTML = "";
+      document.getElementById("map").style.height="500px";
+      document.getElementById('map1').innerHTML = "";
+      document.getElementById('map2').innerHTML = "";
+      cartodb.createVis('map', 'https://ilgeakkaya.cartodb.com/api/v2/viz/34f572e8-37d9-11e5-b009-0e0c41326911/viz.json');
+    }
+    function getHillary() { 
+      document.getElementById('map').innerHTML = "";
+      document.getElementById("map").style.height="0px";
+      document.getElementById('map1').innerHTML = "";
+      document.getElementById('map2').innerHTML = "";
+      cartodb.createVis('map1', 'https://ilgeakkaya.cartodb.com/api/v2/viz/1d681a20-37db-11e5-ab2d-0e9d821ea90d/viz.json', {
+      })
+      .done(function(vis, layers) {
+        window.layers = layers; 
+      })
+      .error(function(err) {
+        console.log(err);
+      });
+      cartodb.createVis('map2', 'https://ilgeakkaya.cartodb.com/api/v2/viz/bbb34efc-37e0-11e5-b9a9-0e9d821ea90d/viz.json');
+    }
+    function main() {
+
+    }
+    window.onload = main;
+  </script>
+</body>
 </html>
