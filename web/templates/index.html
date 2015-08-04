@@ -9,7 +9,7 @@
     html,
     #body{
       width: 1000px;
-      }
+    }
     #map{
       width:95%;
       height: 500px;
@@ -31,67 +31,138 @@
   <link rel="stylesheet" type="text/css" href="static/stylesheet-pure-css.css">
   <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/3.15/themes/css/cartodb.css">
 
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
   <script src="http://libs.cartocdn.com/cartodb.js/v3/3.15/cartodb.js"></script>
 </head>
 <body> 
 
-  <div id="forms">
-    <form action="">
-      Choose a visualization: <br>
-      <div>
-        <input id="radio1" type="radio" name="radio" value="offline" onClick="getComparisonMap();"><label for="radio1"><span><span></span></span>#Elections2016</label>
-      </div> 
-      <div>
-        <input id="radio2" type="radio" name="radio" value="offline" onClick="getHillary();"><label for="radio2"><span><span></span></span>#Hillary vs #Trump</label>
-      </div>
-      <div>
-        <input id="radio3" type="radio" name="radio" value="live"><label for="radio3"><span><span></span></span><form action="/hashtag"> Enter Hashtag:#
-
+  <div id="forms"> 
+    Choose a visualization: <br>
+    <div>
+      <input id="radio1" type="radio" name="radio" value="offline" onClick="getComparisonMap();"><label for="radio1"><span><span></span></span>#Elections2016</label>
+    </div> 
+    <div>
+      <input id="radio2" type="radio" name="radio" value="offline" onClick="getHillary();"><label for="radio2"><span><span></span></span>#Hillary vs #Trump</label>
+    </div>
+    <div>
+      <input id="radio3" type="radio"><label for="radio3"><span><span></span></span></label>Enter custom hashtag:
+      <form action="qmap" method="get" id="submitHashtag">
         <input type="text" name="hashtag">
         <input type="submit" value="Submit">
-      </form></label>
-      </div>
-    </form>
+      </form>
+    </div> 
+    </div>
 
-  </div>
 
-  <div id="map">
-  </div> 
+    <div id="map">
+    </div> 
     <div id="map1">
     </div>
     <div id="map2">
     </div>
 
-  
 
 
-  <script type="text/javascript">
-    function getComparisonMap() {  
-      document.getElementById('map').innerHTML = "";
-      document.getElementById("map").style.height="500px";
-      document.getElementById('map1').innerHTML = "";
-      document.getElementById('map2').innerHTML = "";
-      cartodb.createVis('map', 'https://ilgeakkaya.cartodb.com/api/v2/viz/34f572e8-37d9-11e5-b009-0e0c41326911/viz.json');
-    }
-    function getHillary() { 
-      document.getElementById('map').innerHTML = "";
-      document.getElementById("map").style.height="0px";
-      document.getElementById('map1').innerHTML = "";
-      document.getElementById('map2').innerHTML = "";
-      cartodb.createVis('map1', 'https://ilgeakkaya.cartodb.com/api/v2/viz/1d681a20-37db-11e5-ab2d-0e9d821ea90d/viz.json', {
-      })
-      .done(function(vis, layers) {
-        window.layers = layers; 
-      })
-      .error(function(err) {
-        console.log(err);
+
+    <script type="text/javascript">
+
+    $('#submitHashtag').submit(function(e) {
+
+    e.preventDefault();
+
+    var url = "/qmap"; // the script where you handle the form input.
+
+    $.ajax({
+           type: "POST",
+           url: url,
+           data: $("#submitHashtag").serialize(), // serializes the form's elements.
+           success: function(data)
+           {
+               //alert(data); // show response from the php script.
+               createCustomMap(data);
+           }
+         });
+
+     // avoid to execute the actual submit of the form.
+});
+      function getComparisonMap() {  
+        document.getElementById('map').innerHTML = "";
+        document.getElementById("map").style.height="500px";
+        document.getElementById('map1').innerHTML = "";
+        document.getElementById('map2').innerHTML = "";
+        cartodb.createVis('map', 'https://ilgeakkaya.cartodb.com/api/v2/viz/34f572e8-37d9-11e5-b009-0e0c41326911/viz.json');
+      }
+      function getHillary() { 
+        document.getElementById('map').innerHTML = "";
+        document.getElementById("map").style.height="0px";
+        document.getElementById('map1').innerHTML = "";
+        document.getElementById('map2').innerHTML = "";
+        cartodb.createVis('map1', 'https://ilgeakkaya.cartodb.com/api/v2/viz/1d681a20-37db-11e5-ab2d-0e9d821ea90d/viz.json', {
+        })
+        .done(function(vis, layers) {
+          window.layers = layers; 
+        })
+        .error(function(err) {
+          console.log(err);
+        });
+        cartodb.createVis('map2', 'https://ilgeakkaya.cartodb.com/api/v2/viz/bbb34efc-37e0-11e5-b9a9-0e9d821ea90d/viz.json');
+      }
+      function main() {
+
+      }
+
+      function createCustomMap(tableName){
+        // document.getElementById('map').innerHTML = "";
+        // document.getElementById("map").style.height="500px";
+        // document.getElementById('map1').innerHTML = "";
+        // document.getElementById('map2').innerHTML = "";
+        var map_object = new L.Map('map', {
+        center: [37.7741154,-122.4437914], // San Francisco
+        zoom: 4
       });
-      cartodb.createVis('map2', 'https://ilgeakkaya.cartodb.com/api/v2/viz/bbb34efc-37e0-11e5-b9a9-0e9d821ea90d/viz.json');
-    }
-    function main() {
+        L.tileLayer('http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png', {
+          attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map_object);
 
-    }
-    window.onload = main;
-  </script>
+
+    //to be taken from the response
+    //var tableName = 'flask_23aaa';
+
+
+    var layerMap = {
+        user_name: 'ilgeakkaya', // Required
+        type: 'cartodb', // Required
+        sublayers: [{
+            sql: "SELECT * FROM " + tableName, // Required
+            cartocss: '#'+tableName+' {marker-fill: #FF0000;}', // Required
+        }
+        ]
+      }
+    var torqueMap = {
+      type: 'torque', // Required
+      order: 1, // Optional
+      options: {
+        // query: "SELECT * FROM " + tableName,   // Required if table_name is not given
+        query: 'SELECT cartodb_id,the_geom_webmercator, timestamp::date FROM ' + tableName,
+        table_name: tableName,   // Required if query is not given
+        user_name: "ilgeakkaya", // Required
+        cartocss: "/** torque visualization */ Map { -torque-frame-count:128; -torque-animation-duration:10;  -torque-time-attribute:\"timestamp\";-torque-aggregation-function:\"count(cartodb_id)\"; -torque-resolution:2;-torque-data-aggregation:cumulative;}  #"+tableName+"{comp-op: lighter;marker-fill-opacity: 0.9;marker-line-color: #FFF;marker-line-width: 0;marker-line-opacity: 1;marker-type: ellipse;marker-width: 6;marker-fill: #FF9900;}#"+tableName+"[frame-offset=1] {marker-width:8;marker-fill-opacity:0.45; }#"+tableName+"[frame-offset=2] { marker-width:10;marker-fill-opacity:0.225; }" // Required
+      }
+    };
+
+    cartodb.createLayer(map_object, torqueMap).addTo(map_object);
+    //cartodb.createLayer(map_object, layerMap).addTo(map_object);
+
+      // var map_object = cartodb.createVis('map', 'https://ilgeakkaya.cartodb.com/api/v2/viz/ea7a6122-3825-11e5-8386-0e018d66dc29/viz.json')
+      // .done(function(vis, layers) {
+      //   cartodb.createLayer(map_object, torqueMap).addTo(map_object);
+      // }).error(function(err) {console.log(err);});
+
+}
+
+
+
+window.onload = main;
+</script>
 </body>
 </html>
